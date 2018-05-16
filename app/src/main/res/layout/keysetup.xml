@@ -181,7 +181,7 @@
             android:textSize="20sp" />
 
         <Button
-            android:id="@+id/confirm"
+            android:id="@+id/reset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -189,8 +189,9 @@
             android:layout_marginBottom="27dp"
             android:background="@android:color/transparent"
             android:elevation="20dp"
-            android:text="Confirm"
-            android:textSize="14sp" />
+            android:text="Reset"
+            android:textSize="14sp"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/cancel"
