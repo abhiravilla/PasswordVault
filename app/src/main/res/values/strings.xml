@@ -12,6 +12,6 @@
     <string name="user_name">name</string>
     <string name="default_email">User@gmail.com</string>
     <string name="default_id">Firebase id </string>
-    <string name="default_client_id">1086757452089-s47o9dbqppn00jj72mvci9nafdfbj6oa.apps.googleusercontent.com</string>
+    <string name="default_client_id">API key</string>
 
 </resources>
