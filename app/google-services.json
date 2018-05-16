@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1086757452089",
+    "firebase_url": "https://passwordvault-50bc3.firebaseio.com",
+    "project_id": "passwordvault-50bc3",
+    "storage_bucket": "passwordvault-50bc3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1086757452089:android:f85738d2d8109907",
+        "android_client_info": {
+          "package_name": "com.passvault.abhi.passwordvault"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1086757452089-li0js9ikrk5chglo2phe68ee9u5d3ckm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.passvault.abhi.passwordvault",
+            "certificate_hash": "0260d3b7930620ecd8879b04f8a23ffe8e8c8ba1"
+          }
+        },
+        {
+          "client_id": "1086757452089-s47o9dbqppn00jj72mvci9nafdfbj6oa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFj8xJa4J9kXMTL4knWlycMCgF6qkHUlA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1086757452089-s47o9dbqppn00jj72mvci9nafdfbj6oa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

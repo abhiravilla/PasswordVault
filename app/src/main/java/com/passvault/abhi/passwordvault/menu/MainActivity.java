@@ -114,9 +114,7 @@ public class MainActivity extends AppCompatActivity
 
     private void signout() {
         GoogleSignInClient mGoogleSignInClient;
-        // todefault();
-        // Remove this if it throws null object exception
-        new Todefault().todefault(this);
+        todefault();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mAuth.signOut();
         // web_client_id is used to comunicating with firebase
@@ -131,13 +129,13 @@ public class MainActivity extends AppCompatActivity
         Intent in=new Intent(MainActivity.this,Authenticator.class);
         startActivity(in);
     }
-//    private  void todefault() {
-//        // The user data is all set to default at the time of signout
-//        SharedPreferences userpref = getSharedPreferences("User", this.MODE_PRIVATE);
-//        SharedPreferences.Editor file = userpref.edit();
-//        file.putString("Email", "" + getResources().getString(R.string.default_email));
-//        file.putString("userid", "" + getResources().getString(R.string.default_id));
-//        file.putString("name", "" + getResources().getString(R.string.default_name));
-//        file.apply();
-//    }
+    private  void todefault() {
+        // The user data is all set to default at the time of signout
+        SharedPreferences userpref = getSharedPreferences("User", this.MODE_PRIVATE);
+        SharedPreferences.Editor file = userpref.edit();
+        file.putString("Email", "" + getResources().getString(R.string.default_email));
+        file.putString("userid", "" + getResources().getString(R.string.default_id));
+        file.putString("name", "" + getResources().getString(R.string.default_name));
+        file.apply();
+    }
 }

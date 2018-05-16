@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    android:id="@+id/userTuplecardview"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    card_view:cardCornerRadius="5dp"
+    card_view:cardElevation="30dp"
+    card_view:layout_constraintRight_toRightOf="parent"
+    card_view:layout_constraintLeft_toLeftOf="parent"
+    card_view:layout_constraintTop_toTopOf="parent"
+    card_view:layout_constraintBottom_toBottomOf="parent"
+    android:layout_marginRight="26dp"
+    android:layout_marginLeft="26dp"
+    android:layout_marginTop="60dp"
+    android:layout_marginBottom="60dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="34dp"
+            android:layout_marginTop="35dp"
+            android:fontFamily="sans-serif-condensed"
+            android:paddingLeft="10dp"
+            android:text="Userame  :"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            android:textStyle="italic|bold" />
+
+        <TextView
+            android:id="@+id/susername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/pass"
+            android:layout_alignTop="@+id/username"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:text="Username"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            android:textStyle="italic|bold" />
+
+        <TextView
+            android:id="@+id/password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/username"
+            android:layout_alignTop="@+id/pass"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:text="Password  :"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            android:textStyle="italic|bold" />
+
+        <TextView
+            android:id="@+id/pass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="71dp"
+            android:layout_marginTop="94dp"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center"
+            android:paddingStart="20dp"
+            android:text="Password"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            android:textStyle="italic|bold" />
+
+        <Switch
+            android:id="@+id/edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="44dp"
+            android:layout_marginTop="162dp"
+            android:text="Edit  "
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/plength"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/password"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="246dp"
+            android:text="Password Length"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <EditText
+            android:id="@+id/plengthvalue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/plength"
+            android:layout_alignParentEnd="true"
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="Length"
+            android:inputType="number"
+            android:textSize="16sp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/cpassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="248dp"
+            android:text="Password"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/cpasswordvalue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="200dp"
+            android:text="password"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/username"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="121dp"
+            android:elevation="20dp"
+            android:text="Save"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/edit"
+            android:layout_alignTop="@+id/save"
+            android:elevation="20dp"
+            android:text="Reset"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/regen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="35dp"
+            android:elevation="20dp"
+            android:text="Regenerate"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="38dp"
+            android:elevation="20dp"
+            android:text="Generate"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>
