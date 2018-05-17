@@ -19,16 +19,20 @@ class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.ViewHolder> {
     List<UserTuple> entries;
     Context ctx;
     final private itemClickListener mOnClickListener;
+
     public EntryAdapter(itemClickListener clickhandler) {
         mOnClickListener = clickhandler;
     }
+
     public void setdataEntries(List<UserTuple> entries){
         this.entries=entries;
         notifyDataSetChanged();
     }
+
     public interface itemClickListener{
         void onItemClick(UserTuple utuple);
     }
+
     @Override
     public EntryAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.singleusertuple,parent,false);

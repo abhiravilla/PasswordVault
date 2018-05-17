@@ -8,19 +8,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.passvault.abhi.passwordvault.R;
+import com.passvault.abhi.passwordvault.data.UserTuple;
+
 import java.util.List;
 
 public class SiteAdapter extends RecyclerView.Adapter<SiteAdapter.ViewHolder> {
     List<String> entries;
     Context ctx;
     final private itemClickListener mOnClickListener;
-    public SiteAdapter(List<String> entries,itemClickListener clickhandler) {
-        this.entries=entries;
+
+    public SiteAdapter(itemClickListener clickhandler) {
         mOnClickListener = clickhandler;
     }
+
+    public void setdataEntries(List<String> entries){
+        this.entries=entries;
+        notifyDataSetChanged();
+    }
+
     public interface itemClickListener{
         void onItemClick(String sitename);
     }
+
     @Override
     public SiteAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.singlerow,parent,false);
@@ -36,6 +45,7 @@ public class SiteAdapter extends RecyclerView.Adapter<SiteAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
+        if (null == entries) return 0;
         return entries.size();
     }
 

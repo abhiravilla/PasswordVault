@@ -4,6 +4,8 @@ import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -23,7 +25,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -34,18 +35,25 @@ import com.passvault.abhi.passwordvault.Encryption.Encryption;
 import com.passvault.abhi.passwordvault.R;
 import com.passvault.abhi.passwordvault.background.Passgen;
 import com.passvault.abhi.passwordvault.data.Entries;
+import com.passvault.abhi.passwordvault.data.UserTuple;
 import com.passvault.abhi.passwordvault.display.AppDatabase;
+
+import java.util.List;
+
+import static android.view.View.GONE;
 
 public class Generate extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private int le=0;
     Context context;
     String enpass,uname,sname,epass;
     EditText site,username,length,exclusions;
-    TextView spassword,ssitename,susername,texvalues;
+    TextView spassword,ssitename,susername,texvalues,texclusions;
     private Button gen,regen,save,reset;
     CardView cardView, cardView2;
     String dpass="Password", duser="Username", dsite="Site Name";
     private String pass;
+    String dec;
+    private long sreturn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +91,7 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
         ssitename = (TextView) findViewById(R.id.ssitename);
         susername = (TextView) findViewById(R.id.susername);
         texvalues = (TextView) findViewById(R.id.texvalues);
+        texclusions = (TextView) findViewById(R.id.texclusions);
         gen = (Button) findViewById(R.id.gen);
         regen = (Button) findViewById(R.id.regen);
         save = (Button) findViewById(R.id.save);
@@ -199,14 +208,7 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
         int i = v.getId();
         if (i == R.id.gen) {
             String len =length.getText().toString();
-            if(TextUtils.isEmpty(len)){
-                Toast.makeText(this,"Enter the Value first",Toast.LENGTH_LONG).show();
-                return;
-            }
-            le=Integer.parseInt(len);
-            pass  = generate(le);
-            String exclu = exclusions.getText().toString();
-            String exclusion = "["+exclu+"]";
+
             uname =username.getText().toString();
             sname =site.getText().toString();
             if(TextUtils.isEmpty(uname)){
@@ -217,14 +219,25 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
                 Toast to=Toast.makeText(context,"Enter Site name",Toast.LENGTH_LONG);
                 to.show();
                 return;
-            }else {
-                enpass = new Encryption().encryp(pass,key());
-                cardView.setVisibility(View.GONE);
+            }else if(TextUtils.isEmpty(len)){
+                Toast.makeText(this,"Enter the Value first",Toast.LENGTH_LONG).show();
+                return;
+            }
+              else {
+                le=Integer.parseInt(len);
+                pass  = generate(le);
+                String exclu = exclusions.getText().toString();
+                String exclusion = "["+exclu+"]";
+                new FetchDataTask().execute("Encrypt");
+                cardView.setVisibility(GONE);
                 cardView2.setVisibility(View.VISIBLE);
                 spassword.setText(pass);
                 ssitename.setText(sname);
                 susername.setText(uname);
-                texvalues.setText(exclu);
+                if(TextUtils.isEmpty(exclu)) {
+                    texvalues.setVisibility(GONE);
+                    texclusions.setVisibility(GONE);
+                }
                 regen.setVisibility(View.VISIBLE);
                 save.setVisibility(View.VISIBLE);
                 reset.setVisibility(View.VISIBLE);
@@ -233,7 +246,7 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
         }else if (i == R.id.regen) {
             pass = generate(le);
             spassword.setText(pass);
-            enpass = new Encryption().encryp(pass,key());
+             new Generate.FetchDataTask().execute("Encrypt");
 
         }else if (i == R.id.save){
             save();
@@ -244,27 +257,19 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
 
     private void save() {
 
-        Decryption dc = new Decryption();
-        boolean flag=true;
-        while (flag) {
-            if (dc.decrypt(enpass, key()).equals(pass)) {
-                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "production")
-                        .allowMainThreadQueries()
-                        .build();
-                Entries en = new Entries(sname.trim(), uname.trim(), enpass);
-                long index = db.entryDao().insert(en);
-                if (index > 0) {
-                    Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
-                    reset();
-                } else {
-                    Toast.makeText(this, "Error while saving", Toast.LENGTH_SHORT).show();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (sreturn == 1) {
+                   Toast.makeText(Generate.this, "Save Successful", Toast.LENGTH_SHORT).show();
+                   reset();
                 }
-                flag = false;
-            } else {
-                enpass = new Encryption().encryp(pass, key());
+                else{
+                   Toast.makeText(Generate.this, "Error while Saving", Toast.LENGTH_SHORT).show();
+                 }
             }
-        }
-
+            }, 100);
     }
 
     public void reset(){
@@ -272,15 +277,59 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
         ssitename.setText(dsite);
         susername.setText(duser);
         texvalues.setText("Values");
-        cardView2.setVisibility(View.GONE);
+        texclusions.setVisibility(View.VISIBLE);
+        cardView2.setVisibility(GONE);
         cardView.setVisibility(View.VISIBLE);
-        save.setVisibility(View.GONE);
-        reset.setVisibility(View.GONE);
-        regen.setVisibility(View.GONE);
+        save.setVisibility(GONE);
+        reset.setVisibility(GONE);
+        regen.setVisibility(GONE);
         gen.setVisibility(View.VISIBLE);
         site.setText("");
         username.setText("");
         length.setText("");
         exclusions.setText("");
     }
+
+    public class FetchDataTask extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+            /* If there's no zip code, there's nothing to look up. */
+            if (params.length == 0) {
+            }
+            else {
+                String todo = params[0];
+                if (todo.equals("store")) {
+                    try {
+                        AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "production")
+                                .build();
+                        long i = db.entryDao().insert(new Entries(sname.trim(), uname.trim(), enpass));
+                        Log.i("index",""+i);
+                        if (i > 0) {
+                           sreturn = 1;
+                        } else {
+                            sreturn = 0;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else if (todo.equals("Encrypt")) {
+                    enpass = new Encryption().encryp(pass, key());
+                } else if (todo.equals("Decrypt")) {
+                    Log.i("background","enpass "+enpass+" key "+key());
+                    dec = new Decryption().decrypt(enpass, key());
+                }
+            }
+            return null;
+        }
+
+    }
+
 }
+

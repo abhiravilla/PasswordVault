@@ -4,6 +4,7 @@ import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,13 +22,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.passvault.abhi.passwordvault.Authentication.Authenticator;
+import com.passvault.abhi.passwordvault.Encryption.Decryption;
 import com.passvault.abhi.passwordvault.R;
+import com.passvault.abhi.passwordvault.data.UserTuple;
 import com.passvault.abhi.passwordvault.display.AppDatabase;
 import com.passvault.abhi.passwordvault.display.SiteAdapter;
 import com.passvault.abhi.passwordvault.display.Usertuple;
@@ -38,9 +42,10 @@ import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 
 public class Logins extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener , SiteAdapter.itemClickListener {
     RecyclerView recyclerView ;
-    RecyclerView.Adapter adpater;
+    SiteAdapter adapater;
     SnapHelper snapHelper;
     List<String> sites;
+    private ProgressBar mLoadingIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,17 +70,24 @@ public class Logins extends AppCompatActivity implements NavigationView.OnNaviga
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         hideItem();
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(),AppDatabase.class, "production")
-                .allowMainThreadQueries()
-                .build();
-        sites =db.entryDao().getSnames();
-        Log.i("Logins","Size of returned list "+sites.size());
         recyclerView = findViewById(R.id.recycleview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adpater = new SiteAdapter(sites,this);
-        recyclerView.setAdapter(adpater);
+        adapater = new SiteAdapter(this);
+        recyclerView.setAdapter(adapater);
         snapHelper= new LinearSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
+        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
+        dataView();
+
+    }
+    public void dataView() {
+        recyclerView.setVisibility(View.VISIBLE);
+        new Logins.FetchDataTask().execute();
+    }
+    public void showerror(){
+        recyclerView.setVisibility(View.GONE);
+        Toast.makeText(this,"Error in retrieving",Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
@@ -84,12 +96,12 @@ public class Logins extends AppCompatActivity implements NavigationView.OnNaviga
         Log.i("landscape","In OnConfig");
         if(newConfig.orientation==ORIENTATION_LANDSCAPE){
             recyclerView.setLayoutManager(new GridLayoutManager(this,2));
-            recyclerView.setAdapter(adpater);
+            recyclerView.setAdapter(adapater);
             super.onConfigurationChanged(newConfig);
         }
         else if (newConfig.orientation==ORIENTATION_PORTRAIT){
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(adpater);
+            recyclerView.setAdapter(adapater);
             super.onConfigurationChanged(newConfig);
 
         }
@@ -196,5 +208,42 @@ public class Logins extends AppCompatActivity implements NavigationView.OnNaviga
         Intent in = new Intent(Logins.this, Usertuple.class);
         in.putExtra("sitename",sitename);
         startActivity(in);
+    }
+
+    public class FetchDataTask extends AsyncTask<Void, Void, List<String>> {
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mLoadingIndicator.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected List<String> doInBackground(Void... params) {
+
+            /* If there's no zip code, there's nothing to look up. */
+            try {
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(),AppDatabase.class, "production")
+                        .build();
+                sites =db.entryDao().getSnames();
+                Log.i("Background","returned list "+sites.size());
+                return sites;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<String> Data) {
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
+            if (Data != null) {
+                adapater.setdataEntries(Data);
+            } else {
+                showerror();
+            }
+        }
     }
 }
