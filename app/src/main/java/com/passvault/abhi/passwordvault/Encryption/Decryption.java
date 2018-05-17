@@ -54,11 +54,13 @@ public class Decryption {
     }
     public String decrypt(String text,String key){
         try {
+            Log.i("Decrypt","Key used "+key);
+            Log.i("Decrypt","Password "+text);
             String result = decry(text,key);
             return result;
         }
         catch(Exception e){
-            return "Caught an Exception";
+            return "Exception ";
         }
     }
 

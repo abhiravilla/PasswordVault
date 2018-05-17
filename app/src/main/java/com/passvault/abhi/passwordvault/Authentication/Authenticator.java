@@ -110,6 +110,7 @@ public class Authenticator extends AppCompatActivity implements  View.OnClickLis
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            store(user);
                             Intent in = new Intent(Authenticator.this,Keysetup.class);
                             startActivity(in);
                         } else {
@@ -192,6 +193,8 @@ public class Authenticator extends AppCompatActivity implements  View.OnClickLis
         SharedPreferences userpref = getSharedPreferences("User", this.MODE_PRIVATE);
         SharedPreferences.Editor file = userpref.edit();
         file.putString("Email", ""+user.getEmail());
+        Log.i("userid",""+user.getUid());
+        Log.i("getuid",""+userpref.getString("userid", "none"));
         file.putString("userid", ""+user.getUid());
         file.putString("name",""+user.getDisplayName());
         file.apply();

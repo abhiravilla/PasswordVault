@@ -2,7 +2,8 @@ package com.passvault.abhi.passwordvault.Encryption;
 
 import android.util.Log;
 
-import org.apache.commons.codec.binary.Base64;
+import android.util.Base64;
+
 
 import java.security.spec.KeySpec;
 
@@ -40,7 +41,7 @@ public class Encryption {
         System.arraycopy(encrypted, 0, cipherText, iv.length, encrypted.length);
         Log.d("Key","4 ");
 
-        return new String(Base64.encodeBase64(cipherText));
+        return new String(Base64.encode(cipherText,Base64.DEFAULT));
     }
 
     private byte[] encrypt(byte[] plain) throws Exception {
@@ -48,9 +49,11 @@ public class Encryption {
     }
     public String encryp(String text,String key){
         try {
-            Log.d("In Encryp",""+text);
-            return encry(text,key);
-
+            Log.i("Encryption","Password "+text);
+            Log.i("Encryption","Key used "+key);
+            String k = encry(text,key);
+            Log.i("Encryption","Password "+k);
+            return k;
         }
         catch(Exception e){
             return "Caught an Exception";

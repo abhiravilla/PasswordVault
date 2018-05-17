@@ -29,6 +29,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.passvault.abhi.passwordvault.Authentication.Authenticator;
+import com.passvault.abhi.passwordvault.Encryption.Decryption;
 import com.passvault.abhi.passwordvault.Encryption.Encryption;
 import com.passvault.abhi.passwordvault.R;
 import com.passvault.abhi.passwordvault.background.Passgen;
@@ -44,6 +45,7 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
     private Button gen,regen,save,reset;
     CardView cardView, cardView2;
     String dpass="Password", duser="Username", dsite="Site Name";
+    private String pass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,6 +190,7 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
         SharedPreferences sharedPref = getSharedPreferences(
                 "User", this.MODE_PRIVATE);
         final String passphrase = sharedPref.getString("userid", "none");
+        Log.i("getkey",""+passphrase);
         return passphrase;
     }
 
@@ -201,7 +204,7 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
                 return;
             }
             le=Integer.parseInt(len);
-            String result = generate(le);
+            pass  = generate(le);
             String exclu = exclusions.getText().toString();
             String exclusion = "["+exclu+"]";
             uname =username.getText().toString();
@@ -215,10 +218,10 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
                 to.show();
                 return;
             }else {
-                enpass = new Encryption().encryp(result,key());
+                enpass = new Encryption().encryp(pass,key());
                 cardView.setVisibility(View.GONE);
                 cardView2.setVisibility(View.VISIBLE);
-                spassword.setText(result);
+                spassword.setText(pass);
                 ssitename.setText(sname);
                 susername.setText(uname);
                 texvalues.setText(exclu);
@@ -228,9 +231,9 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
             }
 
         }else if (i == R.id.regen) {
-            String result = generate(le);
-            spassword.setText(result);
-            enpass = new Encryption().encryp(result,key());
+            pass = generate(le);
+            spassword.setText(pass);
+            enpass = new Encryption().encryp(pass,key());
 
         }else if (i == R.id.save){
             save();
@@ -240,19 +243,30 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
     }
 
     private void save() {
-        AppDatabase db = Room.databaseBuilder(getApplicationContext(),AppDatabase.class, "production")
-                .allowMainThreadQueries()
-                .build();
-        Entries en = new Entries(sname,uname,enpass);
-        long index =db.entryDao().insert(en);
-        if(index>0){
-            Toast.makeText(this,"Saved",Toast.LENGTH_SHORT).show();
-            reset();
-        }else{
-            Toast.makeText(this,"Error while saving",Toast.LENGTH_SHORT).show();
+
+        Decryption dc = new Decryption();
+        boolean flag=true;
+        while (flag) {
+            if (dc.decrypt(enpass, key()).equals(pass)) {
+                AppDatabase db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "production")
+                        .allowMainThreadQueries()
+                        .build();
+                Entries en = new Entries(sname.trim(), uname.trim(), enpass);
+                long index = db.entryDao().insert(en);
+                if (index > 0) {
+                    Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+                    reset();
+                } else {
+                    Toast.makeText(this, "Error while saving", Toast.LENGTH_SHORT).show();
+                }
+                flag = false;
+            } else {
+                enpass = new Encryption().encryp(pass, key());
+            }
         }
 
     }
+
     public void reset(){
         spassword.setText(dpass);
         ssitename.setText(dsite);
@@ -260,6 +274,10 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
         texvalues.setText("Values");
         cardView2.setVisibility(View.GONE);
         cardView.setVisibility(View.VISIBLE);
+        save.setVisibility(View.GONE);
+        reset.setVisibility(View.GONE);
+        regen.setVisibility(View.GONE);
+        gen.setVisibility(View.VISIBLE);
         site.setText("");
         username.setText("");
         length.setText("");

@@ -19,9 +19,12 @@ class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.ViewHolder> {
     List<UserTuple> entries;
     Context ctx;
     final private itemClickListener mOnClickListener;
-    public EntryAdapter(List<UserTuple> entries,itemClickListener clickhandler) {
-        this.entries=entries;
+    public EntryAdapter(itemClickListener clickhandler) {
         mOnClickListener = clickhandler;
+    }
+    public void setdataEntries(List<UserTuple> entries){
+        this.entries=entries;
+        notifyDataSetChanged();
     }
     public interface itemClickListener{
         void onItemClick(UserTuple utuple);
@@ -42,6 +45,7 @@ class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
+        if (null == entries) return 0;
         return entries.size();
     }
 
