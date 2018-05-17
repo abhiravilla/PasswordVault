@@ -203,7 +203,8 @@
             android:layout_marginTop="0dp"
             android:background="@drawable/baseline_clear_black_18"
             android:elevation="20dp"
-            android:text="" />
+            android:text=""
+            android:visibility="gone"/>
     </RelativeLayout>
 
 

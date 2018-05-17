@@ -1,6 +1,9 @@
 package com.passvault.abhi.passwordvault.menu;
 
+import android.arch.persistence.room.Room;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -8,20 +11,39 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.passvault.abhi.passwordvault.Authentication.Authenticator;
+import com.passvault.abhi.passwordvault.Encryption.Encryption;
 import com.passvault.abhi.passwordvault.R;
+import com.passvault.abhi.passwordvault.background.Passgen;
+import com.passvault.abhi.passwordvault.data.Entries;
+import com.passvault.abhi.passwordvault.display.AppDatabase;
 
-public class Generate extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class Generate extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+    private int le=0;
+    Context context;
+    String enpass,uname,sname,epass;
+    EditText site,username,length,exclusions;
+    TextView spassword,ssitename,susername,texvalues;
+    private Button gen,regen,save,reset;
+    CardView cardView, cardView2;
+    String dpass="Password", duser="Username", dsite="Site Name";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +68,30 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         hideItem();
+        init();
+    }
+
+    private void init() {
+
+        site = (EditText) findViewById(R.id.site);
+        username = (EditText) findViewById(R.id.username);
+        length = (EditText) findViewById(R.id.length);
+        exclusions = (EditText) findViewById(R.id.exclusions);
+        spassword = (TextView) findViewById(R.id.spassword);
+        ssitename = (TextView) findViewById(R.id.ssitename);
+        susername = (TextView) findViewById(R.id.susername);
+        texvalues = (TextView) findViewById(R.id.texvalues);
+        gen = (Button) findViewById(R.id.gen);
+        regen = (Button) findViewById(R.id.regen);
+        save = (Button) findViewById(R.id.save);
+        reset = (Button) findViewById(R.id.reset);
+        cardView = (CardView) findViewById(R.id.cardview);
+        cardView2 = (CardView) findViewById(R.id.cvgenerated);
+        gen.setOnClickListener(this);
+        regen.setOnClickListener(this);
+        save.setOnClickListener(this);
+        reset.setOnClickListener(this);
+
     }
 
     @Override
@@ -57,7 +103,6 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
             super.onBackPressed();
         }
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -77,8 +122,7 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
 
         return super.onOptionsItemSelected(item);
     }
-    private void hideItem()
-    {
+    private void hideItem()    {
         // Hides the Generate Option for the user since it is the current Activity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu nav_Menu = navigationView.getMenu();
@@ -111,8 +155,7 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
 
     private void signout() {
         GoogleSignInClient mGoogleSignInClient;
-        // todefault();
-        // Remove this if it throws null object exception
+        todefault();
         new Todefault().todefault(this);
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mAuth.signOut();
@@ -128,13 +171,98 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
         Intent in=new Intent(Generate.this,Authenticator.class);
         startActivity(in);
     }
-//    private  void todefault() {
-//        // The user data is all set to default at the time of signout
-//        SharedPreferences userpref = getSharedPreferences("User", this.MODE_PRIVATE);
-//        SharedPreferences.Editor file = userpref.edit();
-//        file.putString("Email", "" + getResources().getString(R.string.default_email));
-//        file.putString("userid", "" + getResources().getString(R.string.default_id));
-//        file.putString("name", "" + getResources().getString(R.string.default_name));
-//        file.apply();
-//    }
+    private  void todefault() {
+        // The user data is all set to default at the time of signout
+        SharedPreferences userpref = getSharedPreferences("User", this.MODE_PRIVATE);
+        SharedPreferences.Editor file = userpref.edit();
+        file.putString("Email", "" + getResources().getString(R.string.default_email));
+        file.putString("userid", "" + getResources().getString(R.string.default_id));
+        file.putString("name", "" + getResources().getString(R.string.default_name));
+        file.apply();
+    }
+    public String generate(int len){
+        Passgen pg=new Passgen(len);
+        return(pg.generate());
+    }
+    private String key(){
+        SharedPreferences sharedPref = getSharedPreferences(
+                "User", this.MODE_PRIVATE);
+        final String passphrase = sharedPref.getString("userid", "none");
+        return passphrase;
+    }
+
+    @Override
+    public void onClick(View v) {
+        int i = v.getId();
+        if (i == R.id.gen) {
+            String len =length.getText().toString();
+            if(TextUtils.isEmpty(len)){
+                Toast.makeText(this,"Enter the Value first",Toast.LENGTH_LONG).show();
+                return;
+            }
+            le=Integer.parseInt(len);
+            String result = generate(le);
+            String exclu = exclusions.getText().toString();
+            String exclusion = "["+exclu+"]";
+            uname =username.getText().toString();
+            sname =site.getText().toString();
+            if(TextUtils.isEmpty(uname)){
+                Toast to = Toast.makeText(context,"Enter Username",Toast.LENGTH_LONG);
+                to.show();
+                return ;
+            }else if(TextUtils.isEmpty(sname)){
+                Toast to=Toast.makeText(context,"Enter Site name",Toast.LENGTH_LONG);
+                to.show();
+                return;
+            }else {
+                enpass = new Encryption().encryp(result,key());
+                cardView.setVisibility(View.GONE);
+                cardView2.setVisibility(View.VISIBLE);
+                spassword.setText(result);
+                ssitename.setText(sname);
+                susername.setText(uname);
+                texvalues.setText(exclu);
+                regen.setVisibility(View.VISIBLE);
+                save.setVisibility(View.VISIBLE);
+                reset.setVisibility(View.VISIBLE);
+            }
+
+        }else if (i == R.id.regen) {
+            String result = generate(le);
+            spassword.setText(result);
+            enpass = new Encryption().encryp(result,key());
+
+        }else if (i == R.id.save){
+            save();
+        }else if (i == R.id.reset){
+
+        }
+    }
+
+    private void save() {
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(),AppDatabase.class, "production")
+                .allowMainThreadQueries()
+                .build();
+        Entries en = new Entries(sname,uname,enpass);
+        long index =db.entryDao().insert(en);
+        if(index>0){
+            Toast.makeText(this,"Saved",Toast.LENGTH_SHORT).show();
+            reset();
+        }else{
+            Toast.makeText(this,"Error while saving",Toast.LENGTH_SHORT).show();
+        }
+
+    }
+    public void reset(){
+        spassword.setText(dpass);
+        ssitename.setText(dsite);
+        susername.setText(duser);
+        texvalues.setText("Values");
+        cardView2.setVisibility(View.GONE);
+        cardView.setVisibility(View.VISIBLE);
+        site.setText("");
+        username.setText("");
+        length.setText("");
+        exclusions.setText("");
+    }
 }

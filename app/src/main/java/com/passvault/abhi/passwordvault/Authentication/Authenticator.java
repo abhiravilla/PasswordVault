@@ -30,20 +30,27 @@ public class Authenticator extends AppCompatActivity implements  View.OnClickLis
 
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
+
     // [START declare_auth]
     private FirebaseAuth mAuth;
     // [END declare_auth]
-    private GoogleSignInClient mGoogleSignInClient;
 
+    private GoogleSignInClient mGoogleSignInClient;
+    private TextView mStatusTextView;
+    private TextView mDetailTextView;
+    static final int Authentication_Request = 1;  //
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authenticator);
+
+
+        // Button listeners
         findViewById(R.id.sign_in_button).setOnClickListener(this);
         // [START config_signin]
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_client_id))
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         // [END config_signin]
@@ -54,6 +61,7 @@ public class Authenticator extends AppCompatActivity implements  View.OnClickLis
         mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
     }
+
     // [START on_start_check_user]
     @Override
     public void onStart() {
@@ -62,6 +70,8 @@ public class Authenticator extends AppCompatActivity implements  View.OnClickLis
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
     }
+    // [END on_start_check_user]
+
     // [START onactivityresult]
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -100,9 +110,8 @@ public class Authenticator extends AppCompatActivity implements  View.OnClickLis
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            store(user);
-// Start the keysetup activity and enable fingerprint
-
+                            Intent in = new Intent(Authenticator.this,Keysetup.class);
+                            startActivity(in);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -116,6 +125,7 @@ public class Authenticator extends AppCompatActivity implements  View.OnClickLis
                 });
     }
     // [END auth_with_google]
+
     // [START signin]
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
@@ -123,23 +133,58 @@ public class Authenticator extends AppCompatActivity implements  View.OnClickLis
     }
     // [END signin]
 
+    private void signOut() {
+        // Firebase sign out
+        mAuth.signOut();
+
+        // Google sign out
+        mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        updateUI(null);
+                    }
+                });
+    }
+
+    private void revokeAccess() {
+        // Firebase sign out
+        mAuth.signOut();
+
+        // Google revoke access
+        mGoogleSignInClient.revokeAccess().addOnCompleteListener(this,
+                new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        updateUI(null);
+                    }
+                });
+    }
+
+
     @Override
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.sign_in_button) {
-            signIn();
-        }
-    }
-    private void updateUI(FirebaseUser user) {
-        if (user != null) {
-            store(user);
-//  Start the fingerprint or passkey activities
-    } else {
-            findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
+           signIn();
         }
     }
 
+    private void updateUI(FirebaseUser user) {
+        if (user != null) {
+            store(user);
+            forward();
+        } else {
+
+        }
+    }
+
+
     private void forward(){
+        //SharedPreferences userpref = getSharedPreferences("User", this.MODE_PRIVATE);
+        //SharedPreferences.Editor file = userpref.edit();
+        //file.putInt("Authentication", 0);
+        //file.apply();
         Intent in=new Intent(Authenticator.this,MainActivity.class);
         startActivity(in);
     }
@@ -151,7 +196,6 @@ public class Authenticator extends AppCompatActivity implements  View.OnClickLis
         file.putString("name",""+user.getDisplayName());
         file.apply();
     }
-
     private  void todefault(){
 
         SharedPreferences userpref = getSharedPreferences("User", this.MODE_PRIVATE);
@@ -161,5 +205,12 @@ public class Authenticator extends AppCompatActivity implements  View.OnClickLis
         file.putString("name",""+getResources().getString(R.string.default_name));
         file.apply();
 
+    }
+    private int authenticate_user(){
+        Intent auth = new Intent(Authenticator.this, MainActivity.class);
+        startActivity(auth);
+        SharedPreferences userpref = getSharedPreferences("User", this.MODE_PRIVATE);
+        int val = userpref.getInt("Authentication", 0);
+        return val;
     }
 }

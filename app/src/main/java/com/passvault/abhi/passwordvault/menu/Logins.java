@@ -1,26 +1,46 @@
 package com.passvault.abhi.passwordvault.menu;
 
+import android.arch.persistence.room.Room;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewStub;
-
+import android.widget.Toast;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.passvault.abhi.passwordvault.Authentication.Authenticator;
 import com.passvault.abhi.passwordvault.R;
+import com.passvault.abhi.passwordvault.display.AppDatabase;
+import com.passvault.abhi.passwordvault.display.SiteAdapter;
+import com.passvault.abhi.passwordvault.display.Usertuple;
 
-public class Logins extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+import java.util.List;
+import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
+import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
+
+public class Logins extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener , SiteAdapter.itemClickListener {
+    RecyclerView recyclerView ;
+    RecyclerView.Adapter adpater;
+    SnapHelper snapHelper;
+    List<String> sites;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +51,11 @@ public class Logins extends AppCompatActivity implements NavigationView.OnNaviga
         vs.setLayoutResource(R.layout.app_bar_main);
         View v=vs.inflate();
         ViewStub vst = (ViewStub)findViewById(R.id.vsbar);
-        vst.setLayoutResource(R.layout.activity_generate);
+        vst.setLayoutResource(R.layout.activity_logins);
         View vt =vst.inflate();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         // Sets the Title of Toolbar
-        toolbar.setTitle("Logins");
+        toolbar.setTitle("Site Names");
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -45,6 +65,34 @@ public class Logins extends AppCompatActivity implements NavigationView.OnNaviga
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         hideItem();
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(),AppDatabase.class, "production")
+                .allowMainThreadQueries()
+                .build();
+        sites =db.entryDao().getSnames();
+        Log.i("Logins","Size of returned list "+sites.size());
+        recyclerView = findViewById(R.id.recycleview);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adpater = new SiteAdapter(sites,this);
+        recyclerView.setAdapter(adpater);
+        snapHelper= new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(recyclerView);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+
+        Log.i("landscape","In OnConfig");
+        if(newConfig.orientation==ORIENTATION_LANDSCAPE){
+            recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+            recyclerView.setAdapter(adpater);
+            super.onConfigurationChanged(newConfig);
+        }
+        else if (newConfig.orientation==ORIENTATION_PORTRAIT){
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(adpater);
+            super.onConfigurationChanged(newConfig);
+
+        }
     }
 
     @Override
@@ -112,9 +160,7 @@ public class Logins extends AppCompatActivity implements NavigationView.OnNaviga
 
     private void signout() {
         GoogleSignInClient mGoogleSignInClient;
-        // todefault();
-        // Remove this if it throws null object exception
-        new Todefault().todefault(this);
+        todefault();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mAuth.signOut();
         // web_client_id is used to comunicating with firebase
@@ -134,13 +180,21 @@ public class Logins extends AppCompatActivity implements NavigationView.OnNaviga
     public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
-//    private  void todefault() {
-//        // The user data is all set to default at the time of signout
-//        SharedPreferences userpref = getSharedPreferences("User", this.MODE_PRIVATE);
-//        SharedPreferences.Editor file = userpref.edit();
-//        file.putString("Email", "" + getResources().getString(R.string.default_email));
-//        file.putString("userid", "" + getResources().getString(R.string.default_id));
-//        file.putString("name", "" + getResources().getString(R.string.default_name));
-//        file.apply();
-//    }
+    private  void todefault() {
+        // The user data is all set to default at the time of signout
+        SharedPreferences userpref = getSharedPreferences("User", this.MODE_PRIVATE);
+        SharedPreferences.Editor file = userpref.edit();
+        file.putString("Email", "" + getResources().getString(R.string.default_email));
+        file.putString("userid", "" + getResources().getString(R.string.default_id));
+        file.putString("name", "" + getResources().getString(R.string.default_name));
+        file.apply();
+    }
+
+    @Override
+    public void onItemClick(String sitename) {
+
+        Intent in = new Intent(Logins.this, Usertuple.class);
+        in.putExtra("sitename",sitename);
+        startActivity(in);
+    }
 }

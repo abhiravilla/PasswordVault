@@ -3,6 +3,7 @@ package com.passvault.abhi.passwordvault.Authentication;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,7 +16,7 @@ public class Keysetup extends AppCompatActivity implements View.OnClickListener 
 
     private  TextView first,second,third,fourth;
     private Button one,two,three,four,five,six,seven,eight,nine,zero,clear,reset;
-    private String keyfirst,keysecond;
+    private String keyfirst="",keysecond="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,256 +60,152 @@ public class Keysetup extends AppCompatActivity implements View.OnClickListener 
     public void onClick(View v) {
 
         if(v.getId()==(R.id.one)){
-
-
-            if(!check(keyfirst)){
-                keyfirst+=one.getText().toString();
-                if(keyfirst.length()==1) first.setText("1");
-                else if(keyfirst.length()==2) second.setText("1");
-                else if(keyfirst.length()==3) third.setText("1");
-                else if(keyfirst.length()==4) four.setText("1");
-            }
-            else{
-                if(!checksecond(keysecond)){
-                    keysecond+=one.getText().toString();
-                    if(keyfirst.length()==1) first.setText("1");
-                    else if(keyfirst.length()==2) second.setText("1");
-                    else if(keyfirst.length()==3) third.setText("1");
-                    else if(keyfirst.length()==4) four.setText("1");
-                }
-            }
+            set("1");
 
         }else if (v.getId()==(R.id.two)){
-
-            if(!check(keyfirst)){
-                keyfirst+=one.getText().toString();
-                if(keyfirst.length()==1) first.setText("2");
-                else if(keyfirst.length()==2) second.setText("2");
-                else if(keyfirst.length()==3) third.setText("2");
-                else if(keyfirst.length()==4) four.setText("2");
-            }
-            else{
-                if(!checksecond(keysecond)){
-                    keysecond+=one.getText().toString();
-                    if(keyfirst.length()==1) first.setText("2");
-                    else if(keyfirst.length()==2) second.setText("2");
-                    else if(keyfirst.length()==3) third.setText("2");
-                    else if(keyfirst.length()==4) four.setText("2");
-                }
-            }
+            set("2");
 
         }else if (v.getId()==(R.id.three)){
+            set("3");
 
-            if(!check(keyfirst)){
-                keyfirst+=one.getText().toString();
-                if(keyfirst.length()==1) first.setText("3");
-                else if(keyfirst.length()==2) second.setText("3");
-                else if(keyfirst.length()==3) third.setText("3");
-                else if(keyfirst.length()==4) four.setText("3");
-            }
-            else{
-
-                if(!checksecond(keysecond)){
-                    keysecond+=one.getText().toString();
-                    if(keyfirst.length()==1) first.setText("3");
-                    else if(keyfirst.length()==2) second.setText("3");
-                    else if(keyfirst.length()==3) third.setText("3");
-                    else if(keyfirst.length()==4) four.setText("3");
-                }
-            }
         }else if (v.getId()==(R.id.four)){
-
-            if(!check(keyfirst)){
-                keyfirst+=one.getText().toString();
-                if(keyfirst.length()==1) first.setText("4");
-                else if(keyfirst.length()==2) second.setText("4");
-                else if(keyfirst.length()==3) third.setText("4");
-                else if(keyfirst.length()==4) four.setText("4");
-            }
-            else{
-
-                if(!checksecond(keysecond)){
-                    keysecond+=one.getText().toString();
-                    if(keyfirst.length()==1) first.setText("4");
-                    else if(keyfirst.length()==2) second.setText("4");
-                    else if(keyfirst.length()==3) third.setText("4");
-                    else if(keyfirst.length()==4) four.setText("4");
-                }
-            }
+            set("4");
 
         }else if (v.getId()==(R.id.five)){
-
-            if(!check(keyfirst)){
-                keyfirst+=one.getText().toString();
-                if(keyfirst.length()==1) first.setText("5");
-                else if(keyfirst.length()==2) second.setText("5");
-                else if(keyfirst.length()==3) third.setText("5");
-                else if(keyfirst.length()==4) four.setText("5");
-            }
-            else{
-
-                if(!checksecond(keysecond)){
-                    keysecond+=one.getText().toString();
-                    if(keyfirst.length()==1) first.setText("5");
-                    else if(keyfirst.length()==2) second.setText("5");
-                    else if(keyfirst.length()==3) third.setText("5");
-                    else if(keyfirst.length()==4) four.setText("5");
-                }
-            }
+            set("5");
 
         }else if (v.getId()==(R.id.six)){
-
-            if(!check(keyfirst)){
-                keyfirst+=one.getText().toString();
-                if(keyfirst.length()==1) first.setText("6");
-                else if(keyfirst.length()==2) second.setText("6");
-                else if(keyfirst.length()==3) third.setText("6");
-                else if(keyfirst.length()==4) four.setText("6");
-            }
-            else{
-
-                if(!checksecond(keysecond)){
-                    keysecond+=one.getText().toString();
-                    if(keyfirst.length()==1) first.setText("6");
-                    else if(keyfirst.length()==2) second.setText("6");
-                    else if(keyfirst.length()==3) third.setText("6");
-                    else if(keyfirst.length()==4) four.setText("6");
-                }
-            }
+            set("6");
         }else if (v.getId()==(R.id.seven)){
-
-            if(!check(keyfirst)){
-                keyfirst+=one.getText().toString();
-                if(keyfirst.length()==1) first.setText("7");
-                else if(keyfirst.length()==2) second.setText("7");
-                else if(keyfirst.length()==3) third.setText("7");
-                else if(keyfirst.length()==4) four.setText("7");
-            }
-            else{
-
-                if(!checksecond(keysecond)){
-                    keysecond+=one.getText().toString();
-                    if(keyfirst.length()==1) first.setText("7");
-                    else if(keyfirst.length()==2) second.setText("7");
-                    else if(keyfirst.length()==3) third.setText("7");
-                    else if(keyfirst.length()==4) four.setText("7");
-                }
-            }
-
+            set("7");
         }else if (v.getId()==(R.id.eight)){
-
-            if(!check(keyfirst)){
-                keyfirst+=one.getText().toString();
-                if(keyfirst.length()==1) first.setText("8");
-                else if(keyfirst.length()==2) second.setText("8");
-                else if(keyfirst.length()==3) third.setText("8");
-                else if(keyfirst.length()==4) four.setText("8");
-            }
-            else{
-
-                if(!checksecond(keysecond)){
-                    keysecond+=one.getText().toString();
-                    if(keyfirst.length()==1) first.setText("8");
-                    else if(keyfirst.length()==2) second.setText("8");
-                    else if(keyfirst.length()==3) third.setText("8");
-                    else if(keyfirst.length()==4) four.setText("8");
-                }
-            }
-
+            set("8");
         }else if (v.getId()==(R.id.nine)){
-
-            if(!check(keyfirst)){
-                keyfirst+=one.getText().toString();
-                if(keyfirst.length()==1) first.setText("9");
-                else if(keyfirst.length()==2) second.setText("9");
-                else if(keyfirst.length()==3) third.setText("9");
-                else if(keyfirst.length()==4) four.setText("9");
-            }
-            else{
-
-                if(!checksecond(keysecond)){
-                    keysecond+=one.getText().toString();
-                    if(keyfirst.length()==1) first.setText("9");
-                    else if(keyfirst.length()==2) second.setText("9");
-                    else if(keyfirst.length()==3) third.setText("9");
-                    else if(keyfirst.length()==4) four.setText("9");
-                }
-            }
-
+            set("9");
         }else if (v.getId()==(R.id.zero)){
-
-            if(!check(keyfirst)){
-                keyfirst+=one.getText().toString();
-                if(keyfirst.length()==1) first.setText("0");
-                else if(keyfirst.length()==2) second.setText("0");
-                else if(keyfirst.length()==3) third.setText("0");
-                else if(keyfirst.length()==4) four.setText("0");
-            }
-            else{
-
-                if(!checksecond(keysecond)){
-                    keysecond+=one.getText().toString();
-                    if(keyfirst.length()==1) first.setText("0");
-                    else if(keyfirst.length()==2) second.setText("0");
-                    else if(keyfirst.length()==3) third.setText("0");
-                    else if(keyfirst.length()==4) four.setText("0");
-                }
-            }
-
+            set("0");
         }else if (v.getId()==R.id.reset){
-
-            }
-
+            reset();
         }else if (v.getId()==R.id.cancel){
-
-
+            cancel();
         }
-    }
-
+}
     private void set(String value) {
-
-        if(!check(keyfirst)){
-            keyfirst+=one.getText().toString();
+        if(!check(keyfirst,value)){
+            keyfirst+=value;
+            Log.i("keysetup","keyFirst "+keyfirst);
             if(keyfirst.length()==1) first.setText(value);
             else if(keyfirst.length()==2) second.setText(value);
             else if(keyfirst.length()==3) third.setText(value);
             else if(keyfirst.length()==4) four.setText(value);
         }
-        else{
-            if(!checksecond(keysecond)){
-                keysecond+=one.getText().toString();
-                if(keyfirst.length()==1) first.setText(value);
-                else if(keyfirst.length()==2) second.setText(value);
-                else if(keyfirst.length()==3) third.setText(value);
-                else if(keyfirst.length()==4) four.setText(value);
+    }
+    public void cancel (){
+        if(keyfirst.length()<4) {
+            if (keyfirst.length() == 1){
+                clear.setVisibility(View.GONE);
+                reset.setVisibility(View.GONE);
+                keyfirst = "";
+                first.setText("*");
+            }
+            else if (keyfirst.length() == 2){
+                keyfirst = keyfirst.substring(0,1);
+                second.setText("*");
+            }
+            else if (keyfirst.length() == 3){
+                keyfirst = keyfirst.substring(0,2);
+                third.setText("*");
             }
         }
-    }
-
-    private boolean checksecond(String keysecond) {
-        if(keysecond.length()==4){
-            checkkeys(keyfirst,keysecond);
-            return true;
+        else{
+            if (keysecond.length() == 1){
+                clear.setVisibility(View.GONE);
+                keysecond="";
+                first.setText("*");
+            }
+            else if (keysecond.length() == 2){
+                keysecond=keysecond.substring(0,1);
+                second.setText("*");
+            }
+            else if (keysecond.length() == 3){
+                keysecond=keysecond.substring(0,1);
+                third.setText("*");
+            }
         }
-        return false;
+
+    }
+    private void reset(){
+        first.setText("*");
+        second.setText("*");
+        third.setText("*");
+        fourth.setText("*");
+        keyfirst="";
+        keysecond="";
+        reset.setVisibility(View.GONE);
+        clear.setVisibility(View.GONE);
     }
 
+    // store key here in the database
+    private void store(String keyfirst) {
+            Log.i("keysetup","key "+keysecond);
+    }
+    private boolean check(String keyfirst,String value){
+        if(keyfirst.length()==1) {
+            reset.setVisibility(View.VISIBLE);
+            clear.setVisibility(View.VISIBLE);
+        }
+        if(keyfirst.length()==3){
+                this.keyfirst+=value;
+            Log.i("keysetup","keyFirst "+this.keyfirst);
+            four.setText(value);
+                clear.setVisibility(View.GONE);
+                first.setText("*");
+                second.setText("*");
+                third.setText("*");
+                fourth.setText("*");
+                Toast.makeText(this, "Re-enter the key", Toast.LENGTH_SHORT).show();
+                return  true;
+        }
+        else if (keyfirst.length()==4){
+            checksecond(keysecond,value);
+            return true;
+
+        }
+        else
+            return false;
+    }
+    private void checksecond(String keysecond,String value) {
+        if(keysecond.length()==1){
+            clear.setVisibility(View.VISIBLE);
+        }
+        if(keysecond.length()==3){
+            Log.i("keysetup","keysecond "+this.keysecond);
+            this.keysecond+=value;
+            four.setText(value);
+            first.setText("*");
+            second.setText("*");
+            third.setText("*");
+            fourth.setText("*");
+            checkkeys(keyfirst,this.keysecond);
+        }
+        else{
+            Log.i("keysetup","keysecond "+keysecond);
+            this.keysecond+=value;
+            if(this.keysecond.length()==1) first.setText(value);
+            else if(this.keysecond.length()==2) second.setText(value);
+            else if(this.keysecond.length()==3) third.setText(value);
+        }
+    }
     private void checkkeys(String keyfirst, String keysecond) {
         if(keyfirst.equals(keysecond)){
             store(keyfirst);
+            reset();
             Intent main=new Intent(Keysetup.this, MainActivity.class);
             startActivity(main);
         }
-    }
-
-    private void store(String keyfirst) {
-    }
-
-    private boolean check(String keyfirst){
-        if(keyfirst.length()==4){
-            Toast.makeText(this,"Re-enter the key",Toast.LENGTH_LONG).show();
-            return true;
+        else{
+            Toast.makeText(this,"Keys do not match......Please try again",Toast.LENGTH_SHORT).show();
+            reset();
         }
-        return false;
     }
 }
