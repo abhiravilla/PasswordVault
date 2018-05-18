@@ -10,36 +10,45 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".menu.MainActivity"
-            android:parentActivityName=".menu.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:parentActivityName=".menu.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".menu.Signout"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".menu.Generate"
+            android:screenOrientation="portrait"
             android:parentActivityName=".menu.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".menu.Logins"
+            android:screenOrientation="portrait"
             android:parentActivityName=".menu.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Authentication.Authenticator"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
-        <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-        <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-        </activity>
-        <activity android:name=".Authentication.Keysetup"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
+            android:name=".Authentication.Keysetup"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".display.Usertuple"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".menu.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".Authentication.Passkey"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

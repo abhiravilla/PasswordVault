@@ -174,7 +174,9 @@ public class Authenticator extends AppCompatActivity implements  View.OnClickLis
     private void updateUI(FirebaseUser user) {
         if (user != null) {
             store(user);
-            forward();
+//            forward();
+            Intent in = new Intent(Authenticator.this,Passkey.class);
+            startActivity(in);
         } else {
 
         }
@@ -194,7 +196,9 @@ public class Authenticator extends AppCompatActivity implements  View.OnClickLis
         SharedPreferences.Editor file = userpref.edit();
         file.putString("Email", ""+user.getEmail());
         Log.i("userid",""+user.getUid());
-        Log.i("getuid",""+userpref.getString("userid", "none"));
+        Log.i("getuid",""+userpref.getString("us" +
+                "userid", "none"));
+        file.putString("imageurl",""+user.getPhotoUrl());
         file.putString("userid", ""+user.getUid());
         file.putString("name",""+user.getDisplayName());
         file.apply();

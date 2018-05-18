@@ -1,6 +1,7 @@
 package com.passvault.abhi.passwordvault.Authentication;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -152,7 +153,11 @@ public class Keysetup extends AppCompatActivity implements View.OnClickListener 
 
     // store key here in the database
     private void store(String keyfirst) {
-            Log.i("keysetup","key "+keysecond);
+        SharedPreferences userpref = getSharedPreferences("passvaultabhikey", this.MODE_PRIVATE);
+        SharedPreferences.Editor file = userpref.edit();
+        file.putString("passcode", ""+keyfirst);
+        file.apply();
+
     }
     private boolean check(String keyfirst,String value){
         if(keyfirst.length()==1) {

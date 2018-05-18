@@ -111,6 +111,7 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            new FetchDataTask().cancel(true);
             super.onBackPressed();
         }
     }
@@ -256,7 +257,7 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
     }
 
     private void save() {
-
+        new FetchDataTask().execute("store");
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -299,7 +300,10 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
 
         @Override
         protected Void doInBackground(String... params) {
-
+            if (isCancelled()){
+                Log.i("cancel","Background task is cancelled");
+                return null;
+            }
             /* If there's no zip code, there's nothing to look up. */
             if (params.length == 0) {
             }
@@ -316,6 +320,7 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
                         } else {
                             sreturn = 0;
                         }
+                        Log.i("sreturn",""+sreturn);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

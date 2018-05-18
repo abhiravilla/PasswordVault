@@ -68,6 +68,13 @@ public class Usertuple extends AppCompatActivity implements EntryAdapter.itemCli
         final String passphrase = sharedPref.getString("userid", "none");
         return passphrase;
     }
+
+    @Override
+    public void onBackPressed() {
+        new FetchDataTask().cancel(true);
+        super.onBackPressed();
+    }
+
     public void dataView() {
         String site= extras.getString("sitename");
         recyclerView.setVisibility(View.VISIBLE);
@@ -89,6 +96,10 @@ public class Usertuple extends AppCompatActivity implements EntryAdapter.itemCli
 
         @Override
         protected List<UserTuple> doInBackground(String... params) {
+            if (isCancelled()){
+                Log.i("cancel","Background task is cancelled");
+                return null;
+            }
 
             /* If there's no zip code, there's nothing to look up. */
             if (params.length == 0) {

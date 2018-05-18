@@ -113,6 +113,7 @@ public class Logins extends AppCompatActivity implements NavigationView.OnNaviga
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
+            new Logins.FetchDataTask().cancel(true);
             super.onBackPressed();
         }
     }
@@ -221,7 +222,10 @@ public class Logins extends AppCompatActivity implements NavigationView.OnNaviga
 
         @Override
         protected List<String> doInBackground(Void... params) {
-
+            if (isCancelled()){
+                Log.i("cancel","Background task is cancelled");
+                return null;
+            }
             /* If there's no zip code, there's nothing to look up. */
             try {
                 AppDatabase db = Room.databaseBuilder(getApplicationContext(),AppDatabase.class, "production")
