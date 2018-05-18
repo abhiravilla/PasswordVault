@@ -27,6 +27,7 @@ public class Usertuple extends AppCompatActivity implements EntryAdapter.itemCli
     List<UserTuple> entries;
     private Bundle extras;
     private ProgressBar mLoadingIndicator;
+    private FetchDataTask asynctask = new FetchDataTask();
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logins);
@@ -71,14 +72,14 @@ public class Usertuple extends AppCompatActivity implements EntryAdapter.itemCli
 
     @Override
     public void onBackPressed() {
-        new FetchDataTask().cancel(true);
+        asynctask.cancel(true);
         super.onBackPressed();
     }
 
     public void dataView() {
         String site= extras.getString("sitename");
         recyclerView.setVisibility(View.VISIBLE);
-        new FetchDataTask().execute(site);
+        asynctask.execute(site);
     }
     public void showerror(){
         recyclerView.setVisibility(View.GONE);
@@ -96,6 +97,7 @@ public class Usertuple extends AppCompatActivity implements EntryAdapter.itemCli
 
         @Override
         protected List<UserTuple> doInBackground(String... params) {
+            Log.i("cancel","in background task");
             if (isCancelled()){
                 Log.i("cancel","Background task is cancelled");
                 return null;

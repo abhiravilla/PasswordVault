@@ -40,7 +40,7 @@ import java.util.List;
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 
-public class Logins extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener , SiteAdapter.itemClickListener {
+public class Logins extends AppCompatActivity implements SiteAdapter.itemClickListener {
     RecyclerView recyclerView ;
     SiteAdapter adapater;
     SnapHelper snapHelper;
@@ -62,14 +62,6 @@ public class Logins extends AppCompatActivity implements NavigationView.OnNaviga
         // Sets the Title of Toolbar
         toolbar.setTitle("Site Names");
         setSupportActionBar(toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        hideItem();
         recyclerView = findViewById(R.id.recycleview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapater = new SiteAdapter(this);
@@ -90,22 +82,6 @@ public class Logins extends AppCompatActivity implements NavigationView.OnNaviga
 
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-
-        Log.i("landscape","In OnConfig");
-        if(newConfig.orientation==ORIENTATION_LANDSCAPE){
-            recyclerView.setLayoutManager(new GridLayoutManager(this,2));
-            recyclerView.setAdapter(adapater);
-            super.onConfigurationChanged(newConfig);
-        }
-        else if (newConfig.orientation==ORIENTATION_PORTRAIT){
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(adapater);
-            super.onConfigurationChanged(newConfig);
-
-        }
-    }
 
     @Override
     public void onBackPressed() {
@@ -119,18 +95,7 @@ public class Logins extends AppCompatActivity implements NavigationView.OnNaviga
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-    private void hideItem()
-    {
-        // Hides the Logins option in menu since it is the current Activity
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        Menu nav_Menu = navigationView.getMenu();
-        nav_Menu.findItem(R.id.nav_logins).setVisible(false);
-    }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -145,31 +110,6 @@ public class Logins extends AppCompatActivity implements NavigationView.OnNaviga
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected (MenuItem item){
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_home) {
-            Intent in=new Intent(this,MainActivity.class);
-            startActivity(in);
-        } else if (id == R.id.nav_delete) {
-
-        } else if (id == R.id.nav_settings) {
-
-        } else if (id == R.id.nav_signout) {
-            signout();
-        }
-        else if (id == R.id.nav_generate){
-            Intent in=new Intent(this,Generate.class);
-            startActivity(in);
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 
     private void signout() {
         GoogleSignInClient mGoogleSignInClient;
@@ -189,10 +129,6 @@ public class Logins extends AppCompatActivity implements NavigationView.OnNaviga
         startActivity(in);
     }
 
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-
-    }
     private  void todefault() {
         // The user data is all set to default at the time of signout
         SharedPreferences userpref = getSharedPreferences("User", this.MODE_PRIVATE);
@@ -222,6 +158,7 @@ public class Logins extends AppCompatActivity implements NavigationView.OnNaviga
 
         @Override
         protected List<String> doInBackground(Void... params) {
+            Log.i("cancel","in background task");
             if (isCancelled()){
                 Log.i("cancel","Background task is cancelled");
                 return null;

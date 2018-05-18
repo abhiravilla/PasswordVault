@@ -42,7 +42,7 @@ import java.util.List;
 
 import static android.view.View.GONE;
 
-public class Generate extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+public class Generate extends AppCompatActivity implements View.OnClickListener {
     private int le=0;
     Context context;
     String enpass,uname,sname,epass;
@@ -70,14 +70,6 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
         // Sets the Title of Toolbar
         toolbar.setTitle("Generate Password");
         setSupportActionBar(toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        hideItem();
         init();
     }
 
@@ -116,11 +108,6 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
         }
     }
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -134,36 +121,7 @@ public class Generate extends AppCompatActivity implements NavigationView.OnNavi
 
         return super.onOptionsItemSelected(item);
     }
-    private void hideItem()    {
-        // Hides the Generate Option for the user since it is the current Activity
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        Menu nav_Menu = navigationView.getMenu();
-        nav_Menu.findItem(R.id.nav_generate).setVisible(false);
-    }
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected (MenuItem item){
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            Intent in=new Intent(this,MainActivity.class);
-            startActivity(in);
-        } else if (id == R.id.nav_logins) {
-            Intent in=new Intent(this,Logins.class);
-            startActivity(in);
-        } else if (id == R.id.nav_delete) {
-
-        } else if (id == R.id.nav_settings) {
-
-        } else if (id == R.id.nav_signout) {
-            signout();
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 
     private void signout() {
         GoogleSignInClient mGoogleSignInClient;
