@@ -50,7 +50,7 @@ public class Generate extends AppCompatActivity implements View.OnClickListener 
     private Button gen,regen,save,reset;
     CardView cardView, cardView2;
     String dpass="Password", duser="Username", dsite="Site Name";
-    private String pass;
+    private String pass,exclu;
     String dec;
     private long sreturn;
 
@@ -131,8 +131,8 @@ public class Generate extends AppCompatActivity implements View.OnClickListener 
         file.putString("name", "" + getResources().getString(R.string.default_name));
         file.apply();
     }
-    public String generate(int len){
-        Passgen pg=new Passgen(len);
+    public String generate(int len, String ex){
+        Passgen pg=new Passgen(len,ex);
         return(pg.generate());
     }
     private String key(){
@@ -165,9 +165,8 @@ public class Generate extends AppCompatActivity implements View.OnClickListener 
             }
               else {
                 le=Integer.parseInt(len);
-                pass  = generate(le);
-                String exclu = exclusions.getText().toString();
-                String exclusion = "["+exclu+"]";
+                exclu = exclusions.getText().toString();
+                pass  = generate(le,exclu);
                 new FetchDataTask().execute("Encrypt");
                 cardView.setVisibility(GONE);
                 cardView2.setVisibility(View.VISIBLE);
@@ -184,7 +183,7 @@ public class Generate extends AppCompatActivity implements View.OnClickListener 
             }
 
         }else if (i == R.id.regen) {
-            pass = generate(le);
+            pass = generate(le,exclu);
             spassword.setText(pass);
              new Generate.FetchDataTask().execute("Encrypt");
 
@@ -226,6 +225,7 @@ public class Generate extends AppCompatActivity implements View.OnClickListener 
         username.setText("");
         length.setText("");
         exclusions.setText("");
+        exclu="";
         site.setVisibility(View.VISIBLE);
         username.setVisibility(View.VISIBLE);
         length.setVisibility(View.VISIBLE);

@@ -32,18 +32,6 @@ public class Usertuple extends AppCompatActivity implements EntryAdapter.itemCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_logins);
         extras = getIntent().getExtras();
-//        String site= extras.getString("sitename");
-//        AppDatabase db = Room.databaseBuilder(getApplicationContext(),AppDatabase.class, "production")
-//                .allowMainThreadQueries()
-//                .build();
-//        entries =db.entryDao().getSpecific(site);
-//        for(UserTuple ut : entries){
-//            Log.i("password",ut.getPassword());
-//            String st = new Decryption().decrypt(ut.getPassword(),key());
-//            Log.i("After decryption",st);
-//            ut.setPassword(st);
-//        }
-//        Log.i("Logins","Size of returned list "+entries.size());
         recyclerView = (RecyclerView)findViewById(R.id.recycleview);
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);

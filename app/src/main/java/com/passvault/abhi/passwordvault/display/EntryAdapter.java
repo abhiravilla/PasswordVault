@@ -18,7 +18,6 @@ import java.util.List;
 
 class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.ViewHolder> {
     List<UserTuple> entries;
-    Context ctx;
     final private itemClickListener mOnClickListener;
 
     public EntryAdapter(itemClickListener clickhandler) {
