@@ -110,6 +110,7 @@ public class Authenticator extends AppCompatActivity implements  View.OnClickLis
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            // Starts the key setup activity and store user details if the user is logging in first time
                             store(user);
                             Intent in = new Intent(Authenticator.this,Keysetup.class);
                             startActivity(in);
@@ -174,7 +175,7 @@ public class Authenticator extends AppCompatActivity implements  View.OnClickLis
     private void updateUI(FirebaseUser user) {
         if (user != null) {
             store(user);
-//            forward();
+//            forward the user to passkey activity to verify the user
             Intent in = new Intent(Authenticator.this,Passkey.class);
             startActivity(in);
         } else {
@@ -182,16 +183,8 @@ public class Authenticator extends AppCompatActivity implements  View.OnClickLis
         }
     }
 
-
-    private void forward(){
-        //SharedPreferences userpref = getSharedPreferences("User", this.MODE_PRIVATE);
-        //SharedPreferences.Editor file = userpref.edit();
-        //file.putInt("Authentication", 0);
-        //file.apply();
-        Intent in=new Intent(Authenticator.this,MainActivity.class);
-        startActivity(in);
-    }
     private void store(FirebaseUser user){
+        // stores the details in shared preference file User. Should use the same name when accessing the file
         SharedPreferences userpref = getSharedPreferences("User", this.MODE_PRIVATE);
         SharedPreferences.Editor file = userpref.edit();
         file.putString("Email", ""+user.getEmail());

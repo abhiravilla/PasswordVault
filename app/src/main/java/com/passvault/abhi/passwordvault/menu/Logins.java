@@ -39,6 +39,7 @@ import com.passvault.abhi.passwordvault.display.Usertuple;
 import java.util.List;
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
+import static android.view.View.GONE;
 
 public class Logins extends AppCompatActivity implements SiteAdapter.itemClickListener {
     RecyclerView recyclerView ;
@@ -55,9 +56,6 @@ public class Logins extends AppCompatActivity implements SiteAdapter.itemClickLi
         ViewStub vs =(ViewStub)findViewById(R.id.vst);
         vs.setLayoutResource(R.layout.app_bar_main);
         View v=vs.inflate();
-        ViewStub vst = (ViewStub)findViewById(R.id.vsbar);
-        vst.setLayoutResource(R.layout.activity_logins);
-        View vt =vst.inflate();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         // Sets the Title of Toolbar
         toolbar.setTitle("Site Names");

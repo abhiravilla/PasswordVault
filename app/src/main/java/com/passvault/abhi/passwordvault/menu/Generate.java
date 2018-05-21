@@ -44,7 +44,6 @@ import static android.view.View.GONE;
 
 public class Generate extends AppCompatActivity implements View.OnClickListener {
     private int le=0;
-    Context context;
     String enpass,uname,sname,epass;
     EditText site,username,length,exclusions;
     TextView spassword,ssitename,susername,texvalues,texclusions;
@@ -63,9 +62,11 @@ public class Generate extends AppCompatActivity implements View.OnClickListener 
         ViewStub vs =(ViewStub)findViewById(R.id.vst);
         vs.setLayoutResource(R.layout.app_bar_main);
         View v=vs.inflate();
-        ViewStub vst = (ViewStub)findViewById(R.id.vsbar);
-        vst.setLayoutResource(R.layout.activity_generate);
-        View vt =vst.inflate();
+        View lay= (View)findViewById(R.id.generate);
+        View laymain= (View)findViewById(R.id.home);
+        laymain.setVisibility(GONE);
+        lay.setVisibility(View.VISIBLE);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         // Sets the Title of Toolbar
         toolbar.setTitle("Generate Password");
@@ -121,26 +122,6 @@ public class Generate extends AppCompatActivity implements View.OnClickListener 
 
         return super.onOptionsItemSelected(item);
     }
-
-
-    private void signout() {
-        GoogleSignInClient mGoogleSignInClient;
-        todefault();
-        new Todefault().todefault(this);
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        mAuth.signOut();
-        // web_client_id is used to comunicating with firebase
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        // [END config_signin]
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        mGoogleSignInClient.signOut();
-        // Takes back to login screen so user can login again
-        Intent in=new Intent(Generate.this,Authenticator.class);
-        startActivity(in);
-    }
     private  void todefault() {
         // The user data is all set to default at the time of signout
         SharedPreferences userpref = getSharedPreferences("User", this.MODE_PRIVATE);
@@ -171,11 +152,11 @@ public class Generate extends AppCompatActivity implements View.OnClickListener 
             uname =username.getText().toString();
             sname =site.getText().toString();
             if(TextUtils.isEmpty(uname)){
-                Toast to = Toast.makeText(context,"Enter Username",Toast.LENGTH_LONG);
+                Toast to = Toast.makeText(this,"Enter Username",Toast.LENGTH_LONG);
                 to.show();
                 return ;
             }else if(TextUtils.isEmpty(sname)){
-                Toast to=Toast.makeText(context,"Enter Site name",Toast.LENGTH_LONG);
+                Toast to=Toast.makeText(this,"Enter Site name",Toast.LENGTH_LONG);
                 to.show();
                 return;
             }else if(TextUtils.isEmpty(len)){
@@ -210,10 +191,9 @@ public class Generate extends AppCompatActivity implements View.OnClickListener 
         }else if (i == R.id.save){
             save();
         }else if (i == R.id.reset){
-
+            reset();
         }
     }
-
     private void save() {
         new FetchDataTask().execute("store");
         Handler handler = new Handler();
@@ -230,7 +210,6 @@ public class Generate extends AppCompatActivity implements View.OnClickListener 
             }
             }, 100);
     }
-
     public void reset(){
         spassword.setText(dpass);
         ssitename.setText(dsite);
@@ -247,8 +226,11 @@ public class Generate extends AppCompatActivity implements View.OnClickListener 
         username.setText("");
         length.setText("");
         exclusions.setText("");
+        site.setVisibility(View.VISIBLE);
+        username.setVisibility(View.VISIBLE);
+        length.setVisibility(View.VISIBLE);
+        exclusions.setVisibility(View.VISIBLE);
     }
-
     public class FetchDataTask extends AsyncTask<String, Void, Void> {
 
         @Override

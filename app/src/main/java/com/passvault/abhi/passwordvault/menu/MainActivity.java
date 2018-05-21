@@ -1,5 +1,6 @@
 package com.passvault.abhi.passwordvault.menu;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -14,12 +15,14 @@ import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -28,6 +31,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.passvault.abhi.passwordvault.Authentication.Authenticator;
 import com.passvault.abhi.passwordvault.R;
+import com.passvault.abhi.passwordvault.data.Save;
 import com.passvault.abhi.passwordvault.display.Homeadapter;
 import com.passvault.abhi.passwordvault.display.SiteAdapter;
 
@@ -46,9 +50,7 @@ public class MainActivity extends AppCompatActivity
         ViewStub vs = (ViewStub)findViewById(R.id.vst);
         vs.setLayoutResource(R.layout.app_bar_main);
         View v=vs.inflate();
-        ViewStub vst = (ViewStub)findViewById(R.id.vsbar);
-        vst.setLayoutResource(R.layout.activity_logins);
-        View vt =vst.inflate();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Home");
         setSupportActionBar(toolbar);
@@ -65,25 +67,25 @@ public class MainActivity extends AppCompatActivity
     }
     public void setvalues(NavigationView navigationView){
 
-        SharedPreferences sharedPref = getSharedPreferences("User", MODE_PRIVATE);
-        String defaultname = getResources().getString(R.string.default_name);
-        String name = sharedPref.getString(getString(R.string.user_name), defaultname);
-        String defaultemail = getResources().getString(R.string.default_email);
-        String email = sharedPref.getString(getString(R.string.user_email), defaultemail);
-        String url = sharedPref.getString("imageurl", "");
-        View headerView = navigationView.getHeaderView(0);
-//        ImageView img = (ImageView) findViewById(R.id.imageView);
-//        try{
-//            URL rl = new URL(url);
-//            img.setImageURI(img.setImageURI(url));
-//        }catch(Exception e){
-//
-//        }
-//        img.setImageURI(img.setImageURI(rl.toURI));
-        TextView uiname = (TextView) headerView.findViewById(R.id.name);
-        uiname.setText(name);
-        TextView uiemail = (TextView) headerView.findViewById(R.id.email);
-        uiemail.setText(email);
+//        SharedPreferences sharedPref = getSharedPreferences("User", MODE_PRIVATE);
+//        String defaultname = getResources().getString(R.string.default_name);
+//        String name = sharedPref.getString(getString(R.string.user_name), defaultname);
+//        String defaultemail = getResources().getString(R.string.default_email);
+//        String email = sharedPref.getString(getString(R.string.user_email), defaultemail);
+//        String url = sharedPref.getString("imageurl", "");
+//        View headerView = navigationView.getHeaderView(0);
+////        ImageView img = (ImageView) findViewById(R.id.imageView);
+////        try{
+////            URL rl = new URL(url);
+////            img.setImageURI(img.setImageURI(url));
+////        }catch(Exception e){
+////
+////        }
+////        img.setImageURI(img.setImageURI(rl.toURI));
+//        TextView uiname = (TextView) headerView.findViewById(R.id.name);
+//        uiname.setText(name);
+//        TextView uiemail = (TextView) headerView.findViewById(R.id.email);
+//        uiemail.setText(email);
     }
 
 
@@ -97,21 +99,21 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
 
 
@@ -126,6 +128,8 @@ public class MainActivity extends AppCompatActivity
         } else if (activity == "Delete") {
         } else if (activity == "Settings") {
         } else if (activity == "Save") {
+            Intent in=new Intent(MainActivity.this,Save.class);
+            startActivity(in);
         }
         else if (activity == "Generate"){
             Intent in=new Intent(MainActivity.this,Generate.class);

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:scrollbarAlwaysDrawVerticalTrack="true"
     tools:context=".menu.MainActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -20,9 +21,27 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <ViewStub
+    <include
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/vsbar"/>
+        layout = "@layout/activity_logins"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:id="@+id/home"
+        android:visibility="visible"/>
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout = "@layout/activity_generate"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:id="@+id/generate"
+        android:visibility="gone"/>
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout = "@layout/activity_save"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:id="@+id/saveactivity"
+        android:visibility="gone"/>
+
 
 </android.support.design.widget.CoordinatorLayout>

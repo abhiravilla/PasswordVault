@@ -1,6 +1,7 @@
 package com.passvault.abhi.passwordvault.data;
 
 import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Ignore;
 
 public class UserTuple {
     @ColumnInfo(name = "Username")
@@ -11,6 +12,10 @@ public class UserTuple {
     public UserTuple(String username,String password){
         this.username = username;
         this.password=password;
+    }
+    @Ignore
+    public UserTuple(){
+
     }
 
     public String getPassword() {
