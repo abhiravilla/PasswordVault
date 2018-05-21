@@ -6,6 +6,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Index;
 import android.support.annotation.NonNull;
 
+// First few lines to say the table has composite primary key and generates composite index for Sitename and Username. If we have single primarykey we can use
+// @Primarykey annotation
 @Entity(primaryKeys = {"Sitename","Username"},
         tableName = "data",
         indices = { @Index(value = {"Sitename", "Username"})})

@@ -48,6 +48,7 @@ public class Save extends AppCompatActivity implements View.OnClickListener {
         init();
 
     }
+    // Intializes the views used in the activity
     private void init() {
         Log.i("init","in init");
         site = (EditText) findViewById(R.id.Ssite);
@@ -59,10 +60,12 @@ public class Save extends AppCompatActivity implements View.OnClickListener {
         reset.setOnClickListener(this);
         Log.i("init","done with init");
     }
+
     public void onClick(View v) {
         Log.i("view","in onclick listner");
         int i = v.getId();
         if (i == R.id.Ssave){
+            // Checks if the user has entered all three values
             Log.i("save","in save");
             pass =length.getText().toString();
             uname =username.getText().toString();
@@ -79,6 +82,7 @@ public class Save extends AppCompatActivity implements View.OnClickListener {
                 Toast.makeText(this,"Enter the Value first",Toast.LENGTH_LONG).show();
                 return;
             }else {
+                // calls the background task to encrypt the password and save the the values to the database
                 new Save.FetchDataTask().execute("Encrypt");
                 save();
             }
@@ -87,10 +91,11 @@ public class Save extends AppCompatActivity implements View.OnClickListener {
         }
     }
     private void save() {
-
+        // Background task to store the
         new Save.FetchDataTask().execute("store");
     }
     private void onsave(){
+        // sreturn will let us know if the data is stored or not and is prompted to the user
         if (sreturn == 1) {
             Toast.makeText(Save.this, "Save Successful", Toast.LENGTH_SHORT).show();
             reset();
@@ -100,6 +105,9 @@ public class Save extends AppCompatActivity implements View.OnClickListener {
             reset();
         }
     }
+
+    // Background task which runs on different thread than main thread. Pre-execute and Post-execute will run on main threads.
+    // Any thing that changes the views should be run in these two methods
     public class FetchDataTask extends AsyncTask<String, Void, String> {
 
         @Override
@@ -113,7 +121,6 @@ public class Save extends AppCompatActivity implements View.OnClickListener {
                 Log.i("cancel","Background task is cancelled");
                 return null;
             }
-            /* If there's no zip code, there's nothing to look up. */
             if (params.length == 0) {
             }
             else {
@@ -153,6 +160,7 @@ public class Save extends AppCompatActivity implements View.OnClickListener {
             }
         }
     }
+    // get the key required to encrypt the data
     private String key(){
         SharedPreferences sharedPref = getSharedPreferences(
                 "User", this.MODE_PRIVATE);
@@ -160,6 +168,7 @@ public class Save extends AppCompatActivity implements View.OnClickListener {
         Log.i("getkey",""+passphrase);
         return passphrase;
     }
+    // Will reset the entire activity
     public void reset(){
         save.setVisibility(View.VISIBLE);
         reset.setVisibility(View.VISIBLE);

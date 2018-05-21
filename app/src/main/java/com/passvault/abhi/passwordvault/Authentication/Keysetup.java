@@ -24,12 +24,14 @@ public class Keysetup extends AppCompatActivity implements View.OnClickListener 
         setContentView(R.layout.keysetup);
         init();
     }
+    // This method will reroute the user to Applications screen if the user press the back key
     public void onBackPressed() {
         Intent startMain = new Intent(Intent.ACTION_MAIN);
         startMain.addCategory(Intent.CATEGORY_HOME);
         startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(startMain);
     }
+    // Initialize all the views used by this activity
     private void init(){
 
         first = (TextView) findViewById(R.id.first);
@@ -61,7 +63,6 @@ public class Keysetup extends AppCompatActivity implements View.OnClickListener 
         clear.setOnClickListener(this);
         reset.setOnClickListener(this);
     }
-
     @Override
     public void onClick(View v) {
 
@@ -96,6 +97,7 @@ public class Keysetup extends AppCompatActivity implements View.OnClickListener 
             cancel();
         }
 }
+    // This will add the entered number to a string and set the textview appropriately.
     private void set(String value) {
         if(!check(keyfirst,value)){
             keyfirst+=value;
@@ -106,6 +108,7 @@ public class Keysetup extends AppCompatActivity implements View.OnClickListener 
             else if(keyfirst.length()==4) four.setText(value);
         }
     }
+    // This will remove the number from view and strings accordingly
     public void cancel (){
         if(keyfirst.length()<4) {
             if (keyfirst.length() == 1){
@@ -140,6 +143,7 @@ public class Keysetup extends AppCompatActivity implements View.OnClickListener 
         }
 
     }
+    // This will reset all the views and strings to default state
     private void reset(){
         first.setText("*");
         second.setText("*");
@@ -150,8 +154,7 @@ public class Keysetup extends AppCompatActivity implements View.OnClickListener 
         reset.setVisibility(View.GONE);
         clear.setVisibility(View.GONE);
     }
-
-    // store key here in the database
+    // store key here in the sharedpreference
     private void store(String keyfirst) {
         SharedPreferences userpref = getSharedPreferences("passvaultabhikey", this.MODE_PRIVATE);
         SharedPreferences.Editor file = userpref.edit();
@@ -159,6 +162,7 @@ public class Keysetup extends AppCompatActivity implements View.OnClickListener 
         file.apply();
 
     }
+    // This method will check the first string and prompt the user to enter the number second time
     private boolean check(String keyfirst,String value){
         if(keyfirst.length()==1) {
             reset.setVisibility(View.VISIBLE);
@@ -184,6 +188,7 @@ public class Keysetup extends AppCompatActivity implements View.OnClickListener 
         else
             return false;
     }
+    // This will add the key to second string for verification
     private void checksecond(String keysecond,String value) {
         if(keysecond.length()==1){
             clear.setVisibility(View.VISIBLE);
@@ -206,6 +211,7 @@ public class Keysetup extends AppCompatActivity implements View.OnClickListener 
             else if(this.keysecond.length()==3) third.setText(value);
         }
     }
+    // This will check the two keys are same.... if not tdatabasehis will reset the all the views and string
     private void checkkeys(String keyfirst, String keysecond) {
         if(keyfirst.equals(keysecond)){
             store(keyfirst);

@@ -164,6 +164,16 @@ public class Authenticator extends AppCompatActivity implements  View.OnClickLis
     }
 
 
+    // This method will route back the user to Applications screen when beck key is pressed
+
+    public void onBackPressed() {
+
+        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startMain);
+    }
+
     @Override
     public void onClick(View v) {
         int i = v.getId();
@@ -196,29 +206,12 @@ public class Authenticator extends AppCompatActivity implements  View.OnClickLis
         file.putString("name",""+user.getDisplayName());
         file.apply();
     }
-    private  void todefault(){
-
-        SharedPreferences userpref = getSharedPreferences("User", this.MODE_PRIVATE);
-        SharedPreferences.Editor file = userpref.edit();
-        file.putString("Email", ""+getResources().getString(R.string.default_email));
-        file.putString("userid", ""+getResources().getString(R.string.default_id));
-        file.putString("name",""+getResources().getString(R.string.default_name));
-        file.apply();
-
-    }
-    private int authenticate_user(){
-        Intent auth = new Intent(Authenticator.this, MainActivity.class);
-        startActivity(auth);
-        SharedPreferences userpref = getSharedPreferences("User", this.MODE_PRIVATE);
-        int val = userpref.getInt("Authentication", 0);
-        return val;
-    }
-    public void onBackPressed() {
-
-        Intent startMain = new Intent(Intent.ACTION_MAIN);
-        startMain.addCategory(Intent.CATEGORY_HOME);
-        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(startMain);
-    }
+//    private int authenticate_user(){
+//        Intent auth = new Intent(Authenticator.this, MainActivity.class);
+//        startActivity(auth);
+//        SharedPreferences userpref = getSharedPreferences("User", this.MODE_PRIVATE);
+//        int val = userpref.getInt("Authentication", 0);
+//        return val;
+//    }
 
 }

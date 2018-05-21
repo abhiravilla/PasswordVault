@@ -4,16 +4,24 @@ import java.util.Random;
 
 public class Passgen {
 
-        private   String specialchar ="!@$%&";
-        private   String number ="0123456789";
-        private   String LOWER = "abcdefghijklmnopqrstuvwxyz";
-        private   String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        private final  String specialchar ="!@$%&";
+        private final String number ="0123456789";
+        private final  String LOWER = "abcdefghijklmnopqrstuvwxyz";
+        private final  String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private int length;
+        private String especialchar, enumber, eLOWER, eUPPER;
 
-        public Passgen(int len) {
+        public Passgen(int len, String exclusions) {
+
             length = len;
+            // Replace all the excluded characters from all four strings
+            especialchar = especialchar.replaceAll("["+exclusions+"]","");
+            enumber = enumber.replaceAll("["+exclusions+"]","");
+            eLOWER = eLOWER.replaceAll("["+exclusions+"]","");
+            eUPPER = eUPPER.replaceAll("["+exclusions+"]","");
         }
-
+        // Randomly generates one number from 0 to 3 to select one of the four strings
+        // And then generates one number randomly to select one of the character from the string
         private String gen() {
             String pass="";
             Random rand = new Random();
@@ -21,37 +29,37 @@ public class Passgen {
             while (templen>0) {
                 int  k = rand.nextInt(4);
                 if(k==0) {
-                    int  n = rand.nextInt(specialchar.length());
-                    String q = ""+specialchar.charAt(n);
+                    int  n = rand.nextInt(especialchar.length());
+                    String q = ""+especialchar.charAt(n);
                     if(!pass.contains(q)) {
-                        pass+=specialchar.charAt(n);
+                        pass+=especialchar.charAt(n);
                         templen--;
                     }else {
                         continue;
                     }
                 }else if (k==1) {
-                    int  n = rand.nextInt(number.length());
-                    String q = ""+number.charAt(n);
+                    int  n = rand.nextInt(enumber.length());
+                    String q = ""+enumber.charAt(n);
                     if(!pass.contains(q)) {
-                        pass+=number.charAt(n);
+                        pass+=enumber.charAt(n);
                         templen--;
                     }else {
                         continue;
                     }
                 }else if (k==2) {
-                    int  n = rand.nextInt(LOWER.length());
-                    String q = ""+LOWER.charAt(n);
+                    int  n = rand.nextInt(eLOWER.length());
+                    String q = ""+eLOWER.charAt(n);
                     if(!pass.contains(q)) {
-                        pass+=LOWER.charAt(n);
+                        pass+=eLOWER.charAt(n);
                         templen--;
                     }else {
                         continue;
                     }
                 }else {
-                    int  n = rand.nextInt(UPPER.length());
-                    String q = ""+UPPER.charAt(n);
+                    int  n = rand.nextInt(eUPPER.length());
+                    String q = ""+eUPPER.charAt(n);
                     if(!pass.contains(q)) {
-                        pass+=UPPER.charAt(n);
+                        pass+=eUPPER.charAt(n);
                         templen--;
                     }else {
                         continue;
